@@ -180,7 +180,9 @@ Error.prepareStackTrace = function(error, structuredStackTrace) {
     line = "" + line;
     file = utils.alignRight(file, longestFile);
     line = utils.alignLeft(line, longestLine);
-    funcName = func.displayName || func.name || callSite.getFunctionName();
+    if (func) {
+      funcName = func.displayName || func.name || callSite.getFunctionName();
+    }
     callSite.getMethodName();
     '???';
     if (funcName === "Module._compile") {

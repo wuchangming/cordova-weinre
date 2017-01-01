@@ -17,6 +17,10 @@
 # under the License.
 #-------------------------------------------------------------------------------
 
+# fixed crash in nodejs v7
+# by wuchangming
+# 2017.1.1
+
 fs   = require 'fs'
 path = require 'path'
 
@@ -28,16 +32,16 @@ SequenceNumberMax = 100 * 1024 * 1024
 SequenceNumber    = 0
 
 #-------------------------------------------------------------------------------
-utils.getNextSequenceNumber = (g) -> 
+utils.getNextSequenceNumber = (g) ->
     SequenceNumber++
-    
+
     if SequenceNumber > SequenceNumberMax
         SequenceNumber = 0
-        
+
     SequenceNumber
 
 #-------------------------------------------------------------------------------
-utils.trim = (string) -> 
+utils.trim = (string) ->
     string.replace(/(^\s+)|(\s+$)/g,'')
 
 #-------------------------------------------------------------------------------
@@ -71,36 +75,36 @@ utils.pitch = (message) ->
 #-------------------------------------------------------------------------------
 utils.setOptions = (options) ->
     utils.options = options
-    
+
 #-------------------------------------------------------------------------------
 utils.ensureInteger = (value, message) ->
     newValue = parseInt value
-    
+
     if isNaN newValue
         utils.exit "#{message}: '#{value}'"
-    
-    newValue    
-    
+
+    newValue
+
 #-------------------------------------------------------------------------------
 utils.ensureString = (value, message) ->
-    
+
     if typeof value != 'string'
         utils.exit "#{message}: '#{value}'"
-    
-    value    
-    
+
+    value
+
 #-------------------------------------------------------------------------------
 utils.ensureBoolean = (value, message) ->
     uValue = value.toString().toUpperCase()
 
-    newValue = null    
+    newValue = null
     switch uValue
         when 'TRUE'  then newValue = true
         when 'FALSE' then newValue = false
-    
+
     if typeof(newValue) != 'boolean'
         utils.exit "#{message}: '#{value}'"
-    
+
     newValue
 
 #-------------------------------------------------------------------------------
@@ -127,7 +131,7 @@ utils.registerClass = (aClass) ->
 utils.alignLeft = (string, length) ->
     while string.length < length
         string = "#{string} "
-        
+
     string
 
 #-------------------------------------------------------------------------------
@@ -139,10 +143,10 @@ utils.alignRight = (string, length) ->
 
 #-------------------------------------------------------------------------------
 utils.fileExistsSync = (name) ->
-    
+
     if fs.existsSync
         return fs.existsSync name
-        
+
     return path.existsSync(name)
 
 #-------------------------------------------------------------------------------
@@ -155,20 +159,20 @@ Error.prepareStackTrace = (error, structuredStackTrace) ->
 
     longestFile = 0
     longestLine = 0
-    
+
     for callSite in structuredStackTrace
         file = callSite.getFileName()
         line = callSite.getLineNumber()
 
         file = path.basename(file)
         line = "#{line}"
-        
+
         if file.length > longestFile
             longestFile = file.length
-    
+
         if line.length > longestLine
             longestLine = line.length
-    
+
     for callSite in structuredStackTrace
         func = callSite.getFunction()
         file = callSite.getFileName()
@@ -176,21 +180,23 @@ Error.prepareStackTrace = (error, structuredStackTrace) ->
 
         file = path.basename(file)
         line = "#{line}"
-        
+
         file = utils.alignRight(file, longestFile)
         line = utils.alignLeft( line, longestLine)
-        
-        funcName = func.displayName ||
-                   func.name || 
-                   callSite.getFunctionName()
-                   callSite.getMethodName()
-                   '???'
-        
+
+        if func
+            funcName = func.displayName ||
+                       func.name ||
+                       callSite.getFunctionName()
+
+        callSite.getMethodName()
+        '???'
+
         if funcName == "Module._compile"
             result.pop()
             result.pop()
             break
-            
+
         result.push "   #{file}:#{line} - #{funcName}()"
-        
+
     result.join "\n"
