@@ -26,6 +26,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+ /**
+  * fixed chrome bug, add ArrowUp, ArrowDown, ArrowRight
+  * by wuchangming
+  */
+
+
 WebInspector.TextPrompt = function(element, completions, stopCharacters, omitHistory)
 {
     this.element = element;
@@ -54,7 +60,7 @@ WebInspector.TextPrompt.prototype = {
 
             // For IE  we don't need a <br> to correctly set console caret; otherwise there will be two lines (incorrect) instead of one
             if (!navigator.userAgent.match(/MSIE/i)) {
-			
+
                 this.element.appendChild(document.createElement("br"));
             }
         } else
@@ -85,15 +91,18 @@ WebInspector.TextPrompt.prototype = {
 
         switch (key) {
             case "Up":
+            case "ArrowUp":
                 this.upKeyPressed(event);
                 break;
             case "Down":
+            case "ArrowDown":
                 this.downKeyPressed(event);
                 break;
             case "U+0009": // Tab
                 this.tabKeyPressed(event);
                 break;
             case "Right":
+            case "ArrowRight":
             case "End":
                 if (!this.acceptAutoComplete())
                     this.autoCompleteSoon();
