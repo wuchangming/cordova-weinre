@@ -18,6 +18,13 @@
 # under the License.
 #---------------------------------------------------------------------------------
 
+#
+#  Dec 11 2016, wuchangming
+#  add a global consoleforspydebugger to enhance `console` for prevent `log message` lost
+#  before Document 'load' and 'DOMContentLoaded'.
+#
+
+
 Weinre   = require('../common/Weinre')
 Timeline = require('../target/Timeline')
 
@@ -170,6 +177,8 @@ module.exports = class Console
 
 #-------------------------------------------------------------------------------
 RemoteConsole   = new Console()
+# make global
+window.consoleforspydebugger = RemoteConsole
 OriginalConsole = window.console or {}
 
 RemoteConsole.__original   = OriginalConsole
