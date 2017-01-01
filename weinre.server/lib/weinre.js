@@ -161,10 +161,8 @@ startServer = function() {
   app.use(express.staticCache(staticCacheOptions));
   app.use(express["static"](options.staticWebDir));
   if (options.boundHost === '-all-') {
-    utils.log("starting server at http://localhost:" + options.httpPort);
     return app.listen(options.httpPort);
   } else {
-    utils.log("starting server at http://" + options.boundHost + ":" + options.httpPort);
     return app.listen(options.httpPort, options.boundHost);
   }
 };
