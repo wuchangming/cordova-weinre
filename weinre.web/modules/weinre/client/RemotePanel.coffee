@@ -18,6 +18,14 @@
 # under the License.
 #---------------------------------------------------------------------------------
 
+#
+# change tips `Connection lost` into Chinese
+#
+# by wuchangming
+#
+# 2017.1.1
+#
+#
 Binding       = require('../common/Binding')
 Weinre        = require('../common/Weinre')
 
@@ -202,7 +210,7 @@ class ClientList extends ConnectorList
 
     #---------------------------------------------------------------------------
     afterInitialConnection: () ->
-        @noneItem.innerHTML = "Connection lost, reload this page to reconnect."
+        @noneItem.innerHTML = "连接已断开，请尝试刷新页面"
         @noneItem.addStyleClass "error"
 
     #---------------------------------------------------------------------------
